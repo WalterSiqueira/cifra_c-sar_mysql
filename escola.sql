@@ -1,35 +1,35 @@
-CREATE DATABASE if NOT EXISTS escola_tecnica;
+CREATE DATABASE IF NOT EXISTS escola_tecnica;
 
-use escola_tecnica;
+USE escola_tecnica;
 
 -- Tabela Aluno
 CREATE TABLE Aluno (
-    AlunoID INT PRIMARY KEY IDENTITY,
-    Nome NVARCHAR(100),
+    AlunoID INT AUTO_INCREMENT PRIMARY KEY,
+    Nome VARCHAR(100),
     Idade INT,
-    Email NVARCHAR(100)
-)
+    Email VARCHAR(100)
+);
 
 -- Tabela Disciplina
 CREATE TABLE Disciplina (
-    DisciplinaID INT PRIMARY KEY IDENTITY,
-    NomeDisciplina NVARCHAR(100),
-    Descricao NVARCHAR(MAX)
-)
+    DisciplinaID INT AUTO_INCREMENT PRIMARY KEY,
+    NomeDisciplina VARCHAR(100),
+    Descricao TEXT
+);
 
 -- Tabela Formacao
 CREATE TABLE Formacao (
-    FormacaoID INT PRIMARY KEY IDENTITY,
-    NomeFormacao NVARCHAR(100),
-    Descricao NVARCHAR(MAX)
-)
+    FormacaoID INT AUTO_INCREMENT PRIMARY KEY,
+    NomeFormacao VARCHAR(100),
+    Descricao TEXT
+);
 
 -- Tabela Professor
 CREATE TABLE Professor (
-    ProfessorID INT PRIMARY KEY IDENTITY,
-    Nome NVARCHAR(100),
-    Email NVARCHAR(100)
-)
+    ProfessorID INT AUTO_INCREMENT PRIMARY KEY,
+    Nome VARCHAR(100),
+    Email VARCHAR(100)
+);
 
 -- Tabela FormacaoProf (Relacionamento entre Professor e Formacao)
 CREATE TABLE FormacaoProf (
@@ -38,14 +38,14 @@ CREATE TABLE FormacaoProf (
     FOREIGN KEY (ProfessorID) REFERENCES Professor(ProfessorID),
     FOREIGN KEY (FormacaoID) REFERENCES Formacao(FormacaoID),
     PRIMARY KEY (ProfessorID, FormacaoID)
-)
+);
 
 -- Tabela Curso
 CREATE TABLE Curso (
-    CursoID INT PRIMARY KEY IDENTITY,
-    NomeCurso NVARCHAR(100),
-    Descricao NVARCHAR(MAX)
-)
+    CursoID INT AUTO_INCREMENT PRIMARY KEY,
+    NomeCurso VARCHAR(100),
+    Descricao TEXT
+);
 
 -- Tabela MatriculaCurso (Relacionamento entre Aluno e Curso)
 CREATE TABLE MatriculaCurso (
@@ -54,288 +54,235 @@ CREATE TABLE MatriculaCurso (
     FOREIGN KEY (AlunoID) REFERENCES Aluno(AlunoID),
     FOREIGN KEY (CursoID) REFERENCES Curso(CursoID),
     PRIMARY KEY (AlunoID, CursoID)
-)
+);
 
+-- Procedimentos Armazenados
+
+-- TbLogin
+DELIMITER //
 
 CREATE PROCEDURE InserirTbLogin (
-    @Username NVARCHAR(50),
-    @Password NVARCHAR(50)
+    IN p_Username VARCHAR(50),
+    IN p_Password VARCHAR(50)
 )
-AS
 BEGIN
-    INSERT INTO TbLogin (Username, Password)
-    VALUES (@Username, @Password)
-END
+    INSERT INTO TbLogin (Username, Password) VALUES (p_Username, p_Password);
+END //
 
-CREATE PROCEDURE SelecionarTbLogin
-AS
+CREATE PROCEDURE SelecionarTbLogin()
 BEGIN
-    SELECT * FROM TbLogin
-END
+    SELECT * FROM TbLogin;
+END //
 
 CREATE PROCEDURE AtualizarTbLogin (
-    @Username NVARCHAR(50),
-    @NewPassword NVARCHAR(50)
+    IN p_Username VARCHAR(50),
+    IN p_NewPassword VARCHAR(50)
 )
-AS
 BEGIN
-    UPDATE TbLogin
-    SET Password = @NewPassword
-    WHERE Username = @Username
-END
+    UPDATE TbLogin SET Password = p_NewPassword WHERE Username = p_Username;
+END //
 
 CREATE PROCEDURE DeletarTbLogin (
-    @Username NVARCHAR(50)
+    IN p_Username VARCHAR(50)
 )
-AS
 BEGIN
-    DELETE FROM TbLogin
-    WHERE Username = @Username
-END
+    DELETE FROM TbLogin WHERE Username = p_Username;
+END //
 
--- Tabela Aluno
+-- Aluno
 CREATE PROCEDURE InserirAluno (
-    @Nome NVARCHAR(100),
-    @Idade INT,
-    @Email NVARCHAR(100)
+    IN p_Nome VARCHAR(100),
+    IN p_Idade INT,
+    IN p_Email VARCHAR(100)
 )
-AS
 BEGIN
-    INSERT INTO Aluno (Nome, Idade, Email)
-    VALUES (@Nome, @Idade, @Email)
-END
+    INSERT INTO Aluno (Nome, Idade, Email) VALUES (p_Nome, p_Idade, p_Email);
+END //
 
-CREATE PROCEDURE SelecionarAluno
-AS
+CREATE PROCEDURE SelecionarAluno()
 BEGIN
-    SELECT * FROM Aluno
-END
+    SELECT * FROM Aluno;
+END //
 
 CREATE PROCEDURE AtualizarAluno (
-    @AlunoID INT,
-    @Nome NVARCHAR(100),
-    @Idade INT,
-    @Email NVARCHAR(100)
+    IN p_AlunoID INT,
+    IN p_Nome VARCHAR(100),
+    IN p_Idade INT,
+    IN p_Email VARCHAR(100)
 )
-AS
 BEGIN
-    UPDATE Aluno
-    SET Nome = @Nome, Idade = @Idade, Email = @Email
-    WHERE AlunoID = @AlunoID
-END
+    UPDATE Aluno SET Nome = p_Nome, Idade = p_Idade, Email = p_Email WHERE AlunoID = p_AlunoID;
+END //
 
 CREATE PROCEDURE DeletarAluno (
-    @AlunoID INT
+    IN p_AlunoID INT
 )
-AS
 BEGIN
-    DELETE FROM Aluno
-    WHERE AlunoID = @AlunoID
-END
+    DELETE FROM Aluno WHERE AlunoID = p_AlunoID;
+END //
 
--- Tabela Disciplina
+-- Disciplina
 CREATE PROCEDURE InserirDisciplina (
-    @NomeDisciplina NVARCHAR(100),
-    @Descricao NVARCHAR(MAX)
+    IN p_NomeDisciplina VARCHAR(100),
+    IN p_Descricao TEXT
 )
-AS
 BEGIN
-    INSERT INTO Disciplina (NomeDisciplina, Descricao)
-    VALUES (@NomeDisciplina, @Descricao)
-END
+    INSERT INTO Disciplina (NomeDisciplina, Descricao) VALUES (p_NomeDisciplina, p_Descricao);
+END //
 
-CREATE PROCEDURE SelecionarDisciplina
-AS
+CREATE PROCEDURE SelecionarDisciplina()
 BEGIN
-    SELECT * FROM Disciplina
-END
+    SELECT * FROM Disciplina;
+END //
 
 CREATE PROCEDURE AtualizarDisciplina (
-    @DisciplinaID INT,
-    @NomeDisciplina NVARCHAR(100),
-    @Descricao NVARCHAR(MAX)
+    IN p_DisciplinaID INT,
+    IN p_NomeDisciplina VARCHAR(100),
+    IN p_Descricao TEXT
 )
-AS
 BEGIN
-    UPDATE Disciplina
-    SET NomeDisciplina = @NomeDisciplina, Descricao = @Descricao
-    WHERE DisciplinaID = @DisciplinaID
-END
+    UPDATE Disciplina SET NomeDisciplina = p_NomeDisciplina, Descricao = p_Descricao WHERE DisciplinaID = p_DisciplinaID;
+END //
 
 CREATE PROCEDURE DeletarDisciplina (
-    @DisciplinaID INT
+    IN p_DisciplinaID INT
 )
-AS
 BEGIN
-    DELETE FROM Disciplina
-    WHERE DisciplinaID = @DisciplinaID
-END
+    DELETE FROM Disciplina WHERE DisciplinaID = p_DisciplinaID;
+END //
 
--- Tabela Formacao
+-- Formacao
 CREATE PROCEDURE InserirFormacao (
-    @NomeFormacao NVARCHAR(100),
-    @Descricao NVARCHAR(MAX)
+    IN p_NomeFormacao VARCHAR(100),
+    IN p_Descricao TEXT
 )
-AS
 BEGIN
-    INSERT INTO Formacao (NomeFormacao, Descricao)
-    VALUES (@NomeFormacao, @Descricao)
-END
+    INSERT INTO Formacao (NomeFormacao, Descricao) VALUES (p_NomeFormacao, p_Descricao);
+END //
 
-CREATE PROCEDURE SelecionarFormacao
-AS
+CREATE PROCEDURE SelecionarFormacao()
 BEGIN
-    SELECT * FROM Formacao
-END
+    SELECT * FROM Formacao;
+END //
 
 CREATE PROCEDURE AtualizarFormacao (
-    @FormacaoID INT,
-    @NomeFormacao NVARCHAR(100),
-    @Descricao NVARCHAR(MAX)
+    IN p_FormacaoID INT,
+    IN p_NomeFormacao VARCHAR(100),
+    IN p_Descricao TEXT
 )
-AS
 BEGIN
-    UPDATE Formacao
-    SET NomeFormacao = @NomeFormacao, Descricao = @Descricao
-    WHERE FormacaoID = @FormacaoID
-END
+    UPDATE Formacao SET NomeFormacao = p_NomeFormacao, Descricao = p_Descricao WHERE FormacaoID = p_FormacaoID;
+END //
 
 CREATE PROCEDURE DeletarFormacao (
-    @FormacaoID INT
+    IN p_FormacaoID INT
 )
-AS
 BEGIN
-    DELETE FROM Formacao
-    WHERE FormacaoID = @FormacaoID
-END
+    DELETE FROM Formacao WHERE FormacaoID = p_FormacaoID;
+END //
 
--- Tabela Professor
+-- Professor
 CREATE PROCEDURE InserirProfessor (
-    @Nome NVARCHAR(100),
-    @Email NVARCHAR(100)
+    IN p_Nome VARCHAR(100),
+    IN p_Email VARCHAR(100)
 )
-AS
 BEGIN
-    INSERT INTO Professor (Nome, Email)
-    VALUES (@Nome, @Email)
-END
+    INSERT INTO Professor (Nome, Email) VALUES (p_Nome, p_Email);
+END //
 
-CREATE PROCEDURE SelecionarProfessor
-AS
+CREATE PROCEDURE SelecionarProfessor()
 BEGIN
-    SELECT * FROM Professor
-END
+    SELECT * FROM Professor;
+END //
 
 CREATE PROCEDURE AtualizarProfessor (
-    @ProfessorID INT,
-    @Nome NVARCHAR(100),
-    @Email NVARCHAR(100)
+    IN p_ProfessorID INT,
+    IN p_Nome VARCHAR(100),
+    IN p_Email VARCHAR(100)
 )
-AS
 BEGIN
-    UPDATE Professor
-    SET Nome = @Nome, Email = @Email
-    WHERE ProfessorID = @ProfessorID
-END
+    UPDATE Professor SET Nome = p_Nome, Email = p_Email WHERE ProfessorID = p_ProfessorID;
+END //
 
 CREATE PROCEDURE DeletarProfessor (
-    @ProfessorID INT
+    IN p_ProfessorID INT
 )
-AS
 BEGIN
-    DELETE FROM Professor
-    WHERE ProfessorID = @ProfessorID
-END
+    DELETE FROM Professor WHERE ProfessorID = p_ProfessorID;
+END //
 
--- Tabela FormacaoProf
+-- FormacaoProf
 CREATE PROCEDURE InserirFormacaoProf (
-    @ProfessorID INT,
-    @FormacaoID INT
+    IN p_ProfessorID INT,
+    IN p_FormacaoID INT
 )
-AS
 BEGIN
-    INSERT INTO FormacaoProf (ProfessorID, FormacaoID)
-    VALUES (@ProfessorID, @FormacaoID)
-END
+    INSERT INTO FormacaoProf (ProfessorID, FormacaoID) VALUES (p_ProfessorID, p_FormacaoID);
+END //
 
-CREATE PROCEDURE SelecionarFormacaoProf
-AS
+CREATE PROCEDURE SelecionarFormacaoProf()
 BEGIN
-    SELECT * FROM FormacaoProf
-END
+    SELECT * FROM FormacaoProf;
+END //
 
 CREATE PROCEDURE DeletarFormacaoProf (
-    @ProfessorID INT,
-    @FormacaoID INT
+    IN p_ProfessorID INT,
+    IN p_FormacaoID INT
 )
-AS
 BEGIN
-    DELETE FROM FormacaoProf
-    WHERE ProfessorID = @ProfessorID AND FormacaoID = @FormacaoID
-END
+    DELETE FROM FormacaoProf WHERE ProfessorID = p_ProfessorID AND FormacaoID = p_FormacaoID;
+END //
 
--- Tabela Curso
+-- Curso
 CREATE PROCEDURE InserirCurso (
-    @NomeCurso NVARCHAR(100),
-    @Descricao NVARCHAR(MAX)
+    IN p_NomeCurso VARCHAR(100),
+    IN p_Descricao TEXT
 )
-AS
 BEGIN
-    INSERT INTO Curso (NomeCurso, Descricao)
-    VALUES (@NomeCurso, @Descricao)
-END
+    INSERT INTO Curso (NomeCurso, Descricao) VALUES (p_NomeCurso, p_Descricao);
+END //
 
-CREATE PROCEDURE SelecionarCurso
-AS
+CREATE PROCEDURE SelecionarCurso()
 BEGIN
-    SELECT * FROM Curso
-END
+    SELECT * FROM Curso;
+END //
 
 CREATE PROCEDURE AtualizarCurso (
-    @CursoID INT,
-    @NomeCurso NVARCHAR(100),
-    @Descricao NVARCHAR(MAX)
+    IN p_CursoID INT,
+    IN p_NomeCurso VARCHAR(100),
+    IN p_Descricao TEXT
 )
-AS
 BEGIN
-    UPDATE Curso
-    SET NomeCurso = @NomeCurso, Descricao = @Descricao
-    WHERE CursoID = @CursoID
-END
+    UPDATE Curso SET NomeCurso = p_NomeCurso, Descricao = p_Descricao WHERE CursoID = p_CursoID;
+END //
 
 CREATE PROCEDURE DeletarCurso (
-    @CursoID INT
+    IN p_CursoID INT
 )
-AS
 BEGIN
-    DELETE FROM Curso
-    WHERE CursoID = @CursoID
-END
+    DELETE FROM Curso WHERE CursoID = p_CursoID;
+END //
 
--- Tabela MatriculaCurso
+-- MatriculaCurso
 CREATE PROCEDURE InserirMatriculaCurso (
-    @AlunoID INT,
-    @CursoID INT
+    IN p_AlunoID INT,
+    IN p_CursoID INT
 )
-AS
 BEGIN
-    INSERT INTO MatriculaCurso (AlunoID, CursoID)
-    VALUES (@AlunoID, @CursoID)
-END
+    INSERT INTO MatriculaCurso (AlunoID, CursoID) VALUES (p_AlunoID, p_CursoID);
+END //
 
-CREATE PROCEDURE SelecionarMatriculaCurso
-AS
+CREATE PROCEDURE SelecionarMatriculaCurso()
 BEGIN
-    SELECT * FROM MatriculaCurso
-END
+    SELECT * FROM MatriculaCurso;
+END //
 
 CREATE PROCEDURE DeletarMatriculaCurso (
-    @AlunoID INT,
-    @CursoID INT
+    IN p_AlunoID INT,
+    IN p_CursoID INT
 )
-AS
 BEGIN
-    DELETE FROM MatriculaCurso
-    WHERE AlunoID = @AlunoID AND CursoID = @CursoID
-END
+    DELETE FROM MatriculaCurso WHERE AlunoID = p_AlunoID AND CursoID = p_CursoID;
+END //
 
+DELIMITER ;
